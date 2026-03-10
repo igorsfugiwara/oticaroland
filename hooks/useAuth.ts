@@ -6,14 +6,10 @@ import {
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
-// "lingao" → "lingao@admin.oticaroland.com"
-// Crie esse usuário em: Firebase Console → Authentication → Users → Add user
-const toEmail = (username: string) => `${username.toLowerCase().trim()}@admin.oticaroland.com`;
-
 export type AuthState = {
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
 };
 
@@ -27,9 +23,9 @@ export function useAuthHook(): AuthState {
     return unsub;
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      await signInWithEmailAndPassword(auth, toEmail(username), password);
+      await signInWithEmailAndPassword(auth, email, password);
       return true;
     } catch {
       return false;

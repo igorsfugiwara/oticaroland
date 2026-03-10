@@ -1,25 +1,53 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../../config/firebase';
 import { useAuth } from '../../store/AuthContext';
 
 export function LoginPage() {
-  const [user, setUser] = useState('');
+  const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetMsg, setResetMsg] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setResetMsg('');
     setLoading(true);
-    const ok = await login(user.trim(), pass);
+    const ok = await login(email.trim(), pass);
     setLoading(false);
     if (ok) {
       navigate('/admin/produtos', { replace: true });
     } else {
-      setError('Usuário ou senha incorretos.');
+      setError('E-mail ou senha incorretos.');
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    if (!email.trim()) {
+      setError('Digite o e-mail antes de redefinir a senha.');
+      return;
+    }
+    setError('');
+    setResetMsg('');
+    setResetLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email.trim());
+      setResetMsg(`Email de redefinição enviado para ${email.trim()}`);
+    } catch (err: unknown) {
+      const code = (err as { code?: string }).code;
+      if (code === 'auth/user-not-found') {
+        setError('Nenhuma conta encontrada para esse e-mail.');
+      } else {
+        setError('Não foi possível enviar o email. Tente novamente.');
+      }
+    } finally {
+      setResetLoading(false);
     }
   };
 
@@ -38,12 +66,13 @@ export function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Usuário</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">E-mail</label>
             <input
+              type="email"
               className={inputCls}
-              value={user}
-              onChange={e => setUser(e.target.value)}
-              autoComplete="username"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              autoComplete="email"
               required
               disabled={loading}
             />
@@ -62,6 +91,7 @@ export function LoginPage() {
           </div>
 
           {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
+          {resetMsg && <p className="text-emerald-600 text-sm font-medium">{resetMsg}</p>}
 
           <button
             type="submit"
@@ -72,7 +102,18 @@ export function LoginPage() {
           </button>
         </form>
 
-        <a href="/" className="block text-center mt-6 text-xs text-slate-400 hover:text-navy transition-colors">
+        <div className="mt-4 text-center">
+          <button
+            type="button"
+            onClick={handlePasswordReset}
+            disabled={resetLoading}
+            className="text-xs text-gold/50 hover:text-gold transition-colors disabled:opacity-40"
+          >
+            {resetLoading ? 'Enviando...' : 'Esqueci minha senha'}
+          </button>
+        </div>
+
+        <a href="/" className="block text-center mt-4 text-xs text-slate-400 hover:text-navy transition-colors">
           ← Voltar ao site
         </a>
       </div>

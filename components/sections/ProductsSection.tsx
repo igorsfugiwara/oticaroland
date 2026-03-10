@@ -111,7 +111,7 @@ export function ProductsSection({ products, onAddToCart, onConsult, whatsapp }: 
                 {product.quantity > 0 ? (
                   <button
                     onClick={() => onAddToCart(product)}
-                    className="mt-auto w-full border-2 border-navy/10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-navy hover:bg-navy hover:text-white hover:border-navy transition-all active:scale-95"
+                    className="mt-auto w-full border-2 border-navy/10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-navy hover:bg-navy hover:text-white hover:border-navy hover:[color:white] transition-all active:scale-95"
                   >
                     Comprar Agora
                   </button>

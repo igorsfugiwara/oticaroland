@@ -10,7 +10,9 @@ export function AdminLayout({ children, onLogout }: Props) {
   const { pathname } = useLocation();
 
   const navLinks = [
+    { to: '/admin/dashboard', label: 'Dashboard' },
     { to: '/admin/produtos', label: 'Produtos' },
+    { to: '/admin/clientes', label: 'Clientes' },
     { to: '/admin/configuracoes', label: 'Configurações' },
   ];
 

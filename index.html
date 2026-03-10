@@ -8,7 +8,7 @@
     <meta name="keywords" content="ótica, óculos de sol, lentes de contato, Vila Mariana, São Paulo, Walter Fugiwara, Ótica Roland">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://oticaroland.com.br">
-    <link rel="favicon" href="./assets/logo-extend.jpg">
+    <link rel="icon" href="./assets/fav.png">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -77,6 +77,8 @@
         .hover\:text-navy:hover { color: #0f172a !important; }
         .hover\:bg-gold:hover   { background-color: #d4a854 !important; }
         .hover\:text-gold:hover { color: #d4a854 !important; }
+        /* text-white em hover precisa sobrepor o !important do fallback text-navy */
+        .hover\:text-white:hover { color: #ffffff !important; }
         /* Opacity / transparency variants — todos mapeados */
         .bg-navy\/5   { background-color: rgba(15,23,42,0.05) !important; }
         .bg-navy\/10  { background-color: rgba(15,23,42,0.1)  !important; }
