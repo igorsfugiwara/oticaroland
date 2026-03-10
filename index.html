@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ótica Roland | Óculos e Lentes na Vila Mariana, SP</title>
+    <meta name="description" content="Ótica Roland na Vila Mariana, SP. Óculos de sol premium, lentes de contato e consultoria técnica com Sr. Walter Fugiwara. Atendimento seg-sex 10h-17h.">
+    <meta name="keywords" content="ótica, óculos de sol, lentes de contato, Vila Mariana, São Paulo, Walter Fugiwara, Ótica Roland">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://oticaroland.com.br">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ótica Roland | Vila Mariana, SP">
+    <meta property="og:description" content="Óculos de sol premium e lentes de contato com consultoria técnica especializada. Há mais de 24 anos na Vila Mariana.">
+    <meta property="og:url" content="https://oticaroland.com.br">
+    <meta property="og:image" content="/assets/aviador.png">
+    <meta property="og:locale" content="pt_BR">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Preconnects para fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+    <!-- 1) CDN carrega primeiro -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 2) Config DEPOIS do CDN — única forma que funciona -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: '#0f172a',
+              gold: '#d4a854',
+            },
+            boxShadow: {
+              '3xl': '0 35px 60px -15px rgba(0,0,0,0.3)',
+            },
+            fontFamily: {
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+          }
+        }
+      }
+    </script>
+
+    <style>
+        /* ── Bases ─────────────────────────────────── */
+        :root {
+            --navy: #0f172a;
+            --gold: #d4a854;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            overflow-x: hidden;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ── Fallback para cores custom (garante render mesmo se CDN config atrasar) */
+        .bg-navy   { background-color: #0f172a !important; }
+        .text-navy { color: #0f172a !important; }
+        .border-navy { border-color: #0f172a !important; }
+        .bg-gold   { background-color: #d4a854 !important; }
+        .text-gold { color: #d4a854 !important; }
+        .border-gold { border-color: #d4a854 !important; }
+        .ring-gold { --tw-ring-color: #d4a854 !important; }
+        /* Hover overrides via CSS (Tailwind CDN já processa hover:, mas garante fallback) */
+        .hover\:bg-navy:hover   { background-color: #0f172a !important; }
+        .hover\:text-navy:hover { color: #0f172a !important; }
+        .hover\:bg-gold:hover   { background-color: #d4a854 !important; }
+        .hover\:text-gold:hover { color: #d4a854 !important; }
+        /* Opacity / transparency variants — todos mapeados */
+        .bg-navy\/5   { background-color: rgba(15,23,42,0.05) !important; }
+        .bg-navy\/10  { background-color: rgba(15,23,42,0.1)  !important; }
+        .bg-navy\/20  { background-color: rgba(15,23,42,0.2)  !important; }
+        .bg-navy\/40  { background-color: rgba(15,23,42,0.4)  !important; }
+        .bg-navy\/60  { background-color: rgba(15,23,42,0.6)  !important; }
+        .bg-gold\/10  { background-color: rgba(212,168,84,0.1) !important; }
+        .bg-gold\/40  { background-color: rgba(212,168,84,0.4) !important; }
+        .bg-gold\/60  { background-color: rgba(212,168,84,0.6) !important; }
+        .text-gold\/90 { color: rgba(212,168,84,0.9) !important; }
+        .border-gold\/40  { border-color: rgba(212,168,84,0.4) !important; }
+        .border-gold\/50  { border-color: rgba(212,168,84,0.5) !important; }
+        .border-gold\/60  { border-color: rgba(212,168,84,0.6) !important; }
+        .border-navy\/10  { border-color: rgba(15,23,42,0.1) !important; }
+        .border-t-gold    { border-top-color: #d4a854 !important; }
+        .from-navy        { --tw-gradient-from: #0f172a !important; }
+        .via-navy\/40     { --tw-gradient-via: rgba(15,23,42,0.4) !important; }
+        .shadow-navy\/20  { --tw-shadow-color: rgba(15,23,42,0.2) !important; }
+        .focus\:ring-gold\/30:focus { --tw-ring-color: rgba(212,168,84,0.3) !important; }
+        .focus\:border-gold:focus   { border-color: #d4a854 !important; }
+        .animate-ping { animation: ping 1.5s cubic-bezier(0,0,0.2,1) infinite; }
+        @keyframes ping {
+            75%, 100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* ── Header glassmorphism ───────────────────── */
+        .glass-header {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(212, 168, 84, 0.15);
+        }
+
+        /* ── Sombra extra ───────────────────────────── */
+        .shadow-3xl {
+            box-shadow: 0 35px 60px -15px rgba(0,0,0,0.3);
+        }
+
+        /* ── Animações ──────────────────────────────── */
+        .animate-kenburns {
+            animation: kenburns 30s ease-out infinite alternate;
+            will-change: transform;
+        }
+        @keyframes kenburns {
+            0%   { transform: scale(1); }
+            100% { transform: scale(1.08); }
+        }
+
+        .animate-in {
+            animation: slideInRight 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(60px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s cubic-bezier(0.2,0.8,0.2,1),
+                        transform 0.6s cubic-bezier(0.2,0.8,0.2,1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Selection ──────────────────────────────── */
+        ::selection {
+            background: #d4a854;
+            color: #0f172a;
+        }
+
+        /* ── Scrollbar customizada ──────────────────── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #d4a854; border-radius: 3px; }
+    </style>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Optician",
+      "name": "Ótica Roland",
+      "description": "Ótica premium com óculos de sol e lentes de contato na Vila Mariana.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Domingos de Morais, 138",
+        "addressLocality": "Vila Mariana",
+        "addressRegion": "SP",
+        "postalCode": "04010-020",
+        "addressCountry": "BR"
+      },
+      "telephone": "+5511998793053",
+      "openingHours": ["Mo-Fr 10:00-17:00", "Sa 10:00-14:00"],
+      "url": "https://oticaroland.com.br",
+      "founder": { "@type": "Person", "name": "Walter Fugiwara" }
+    }
+    </script>
+</head>
+<body class="antialiased">
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+</body>
+</html>
