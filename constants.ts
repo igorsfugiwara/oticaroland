@@ -1,4 +1,5 @@
 import { Product, SiteConfig } from './types';
+import { aviadorHero, aviadorSolar, vrOne, oasis, lensWipes } from './assets/index';
 
 export const SHOP_INFO: SiteConfig = {
   shopName: 'Ótica Roland',
@@ -14,7 +15,7 @@ export const SHOP_INFO: SiteConfig = {
 };
 
 export const IMAGES = {
-  hero: '/assets/aviador.png',
+  hero: aviadorHero,
   // Placeholder — substituir pela foto real do Sr. Walter ou da loja
   story: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&q=80&w=900',
 };
@@ -26,7 +27,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     price: 280,
     description: 'Leveza e proteção com lentes polarizadas de alta definição.',
     quantity: 5,
-    imageUrl: '/assets/aviador-solar.png',
+    imageUrl: aviadorSolar,
     isConsultative: false,
     active: true,
     order: 0,
@@ -38,7 +39,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     price: 750,
     description: 'Óculos de sol com tecnologia Zeiss de alta performance visual.',
     quantity: 3,
-    imageUrl: '/assets/vrone.png',
+    imageUrl: vrOne,
     isConsultative: false,
     active: true,
     order: 1,
@@ -50,7 +51,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     price: 260,
     description: 'Hidratação contínua para o máximo conforto diário.',
     quantity: 10,
-    imageUrl: '/assets/oasis.png',
+    imageUrl: oasis,
     isConsultative: false,
     active: true,
     order: 2,
@@ -62,7 +63,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     price: 99,
     description: 'Lenços de limpeza óptica profissional para manutenção das suas lentes.',
     quantity: 20,
-    imageUrl: '/assets/lens-wipes.png',
+    imageUrl: lensWipes,
     isConsultative: false,
     active: true,
     order: 3,
