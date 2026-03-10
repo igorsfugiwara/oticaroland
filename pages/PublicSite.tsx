@@ -63,7 +63,7 @@ export function PublicSite() {
       />
 
       {toast && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-navy text-white px-8 py-4 rounded-full text-sm font-bold shadow-2xl z-[200] animate-in">
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-navy text-white px-12 py-4 rounded-2xl text-sm font-bold shadow-2xl z-[200] animate-in whitespace-nowrap">
           {toast}
         </div>
       )}
