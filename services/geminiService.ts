@@ -71,7 +71,7 @@ ${buildProductContext(request.products)}`;
     try {
       const client = this.getClient();
       const response = await client.models.generateContent({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
         contents,
         config: { systemInstruction, temperature: 0.7 },
       });
