@@ -14,7 +14,8 @@ export function HeroSection({ siteConfig }: Props) {
           src={IMAGES.hero}
           className="w-full h-full object-cover opacity-40 animate-kenburns"
           alt="Ótica Roland Experience"
-          fetchPriority="high"
+          //@ts-ignore
+          fetchpriority="high"
           width={1920}
           height={1080}
         />
