@@ -50,7 +50,7 @@ export function PublicSite() {
       </main>
 
       <Footer siteConfig={siteConfig} />
-      <Assistant />
+      <Assistant onAddToCart={addToCart} />
 
       <CartSidebar
         cart={cart}
