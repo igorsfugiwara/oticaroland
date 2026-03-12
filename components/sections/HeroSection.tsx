@@ -37,7 +37,7 @@ export function HeroSection({ siteConfig }: Props) {
               href="#produtos"
               className="group bg-gold text-navy px-12 py-5 rounded-full font-bold uppercase tracking-widest hover:bg-white transition-all transform hover:scale-105 shadow-2xl flex items-center gap-3"
             >
-              Coleção 2024
+              Coleção 2026
               <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>

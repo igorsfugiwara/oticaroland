@@ -1,14 +1,19 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { geminiService, ChatMessage } from '../services/geminiService';
+import { geminiService, Message } from '../services/geminiService';
 import { useCMS } from '../store/CMSContext';
+
+const WELCOME = 'Olá! Sou o assistente da Ótica Roland. Como posso ajudar com suas lentes ou óculos hoje?';
+const ERROR_MSG = 'Ops, tive um problema técnico. Tente novamente ou fale com o Sr. Walter pelo WhatsApp.';
+
+type DisplayMsg = { role: 'user' | 'ai'; text: string };
 
 export function Assistant() {
   const { activeProducts } = useCMS();
   const [isOpen, setIsOpen] = useState(false);
-  const [displayMessages, setDisplayMessages] = useState<{ role: 'user' | 'ai'; text: string }[]>([
-    { role: 'ai', text: 'Olá! Sou o assistente da Ótica Roland. Como posso ajudar com suas lentes ou óculos hoje?' },
+  const [displayMessages, setDisplayMessages] = useState<DisplayMsg[]>([
+    { role: 'ai', text: WELCOME },
   ]);
-  const [history, setHistory] = useState<ChatMessage[]>([]);
+  const [history, setHistory] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const lastSentAt = useRef<number>(0);
@@ -31,15 +36,24 @@ export function Assistant() {
     setDisplayMessages(prev => [...prev, { role: 'user', text: userText }]);
     setIsLoading(true);
 
-    const response = await geminiService.getAdvice(userText, history, activeProducts);
+    try {
+      const response = await geminiService.getResponse({
+        userMessage: userText,
+        products: activeProducts,
+        history: history.slice(-10),
+      });
 
-    setHistory(prev => [
-      ...prev,
-      { role: 'user', parts: [{ text: userText }] },
-      { role: 'model', parts: [{ text: response }] },
-    ]);
-    setDisplayMessages(prev => [...prev, { role: 'ai', text: response }]);
-    setIsLoading(false);
+      setHistory(prev => [
+        ...prev,
+        { role: 'user', text: userText },
+        { role: 'assistant', text: response },
+      ]);
+      setDisplayMessages(prev => [...prev, { role: 'ai', text: response }]);
+    } catch {
+      setDisplayMessages(prev => [...prev, { role: 'ai', text: ERROR_MSG }]);
+    } finally {
+      setIsLoading(false);
+    }
   }, [input, isLoading, history, activeProducts]);
 
   return (
