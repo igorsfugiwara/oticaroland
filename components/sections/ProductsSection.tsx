@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Product } from '../../types';
 
 interface Props {
@@ -8,18 +8,52 @@ interface Props {
   whatsapp: string;
 }
 
+const MOBILE_INITIAL_COUNT = 3;
+
 export function ProductsSection({ products, onAddToCart, onConsult, whatsapp }: Props) {
   const [activeTag, setActiveTag] = useState<string>('todos');
+  const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [tagsAtEnd, setTagsAtEnd] = useState(false);
+  const tagsRef = useRef<HTMLDivElement>(null);
 
-  const allTags = useMemo(() => {
-    const tags = new Set<string>();
-    products.forEach(p => p.tags.forEach(t => tags.add(t)));
-    return ['todos', ...Array.from(tags)];
-  }, [products]);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+const TAG_ORDER = ['todos', 'solar', 'grau', 'lentes', 'infantil', 'acessorios'];
+
+const allTags = useMemo(() => {
+  const tags = new Set<string>();
+  products.forEach(p => p.tags.forEach(t => tags.add(t)));
+  const remaining = Array.from(tags).filter(t => !TAG_ORDER.includes(t));
+  return [...TAG_ORDER.filter(t => t === 'todos' || tags.has(t)), ...remaining];
+}, [products]);
 
   const filtered = activeTag === 'todos'
     ? products
     : products.filter(p => p.tags.includes(activeTag));
+
+  // Reset "ver mais" whenever filter changes
+  useEffect(() => {
+    setShowAll(false);
+  }, [activeTag]);
+
+  const handleTagsScroll = () => {
+    const el = tagsRef.current;
+    if (!el) return;
+    setTagsAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
+  };
+
+  // Check on mount if already at end (few tags)
+  useEffect(() => {
+    handleTagsScroll();
+  }, [allTags]);
+
+  const visibleProducts = isMobile && !showAll ? filtered.slice(0, MOBILE_INITIAL_COUNT) : filtered;
 
   return (
     <section id="produtos" className="py-40 bg-white">
@@ -33,25 +67,37 @@ export function ProductsSection({ products, onAddToCart, onConsult, whatsapp }: 
               Uma seleção rigorosa de acessórios ópticos que elevam a sua percepção visual e estilo pessoal.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {allTags.map(tag => (
-              <button
-                key={tag}
-                onClick={() => setActiveTag(tag)}
-                className={`px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${
-                  activeTag === tag
-                    ? 'bg-navy text-white shadow-xl scale-105'
-                    : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
+
+          {/* Tags scroll com fade hint */}
+          <div className="relative w-full md:w-auto">
+            <div
+              ref={tagsRef}
+              onScroll={handleTagsScroll}
+              className="flex gap-2 overflow-x-auto pb-2 md:flex-wrap md:overflow-visible md:pb-0 scrollbar-hide"
+            >
+              {allTags.map(tag => (
+                <button
+                  key={tag === 'todos' ? 'Todos' : tag.replace(/-/g, ' ')}
+                  onClick={() => setActiveTag(tag)}
+                  className={`flex-shrink-0 px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${
+                    activeTag === tag
+                      ? 'bg-navy text-white shadow-xl scale-105'
+                      : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
+                  }`}
+                >
+                  {tag === 'todos' ? 'Todos' : tag.replace(/-/g, ' ')}
+                </button>
+              ))}
+            </div>
+            {/* Gradient fade — only on mobile, hides when scrolled to end */}
+            <div
+              className={`pointer-events-none absolute top-0 right-0 h-full w-16 bg-gradient-to-l from-white to-transparent transition-opacity duration-300 md:hidden ${tagsAtEnd ? 'opacity-0' : 'opacity-100'}`}
+            />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
-          {filtered.map(product => (
+          {visibleProducts.map(product => (
             <div
               key={product.id}
               className="group flex flex-col h-full bg-slate-50/30 rounded-[2.5rem] border border-transparent hover:border-slate-100 hover:bg-white transition-all duration-500 hover:shadow-3xl p-6"
@@ -127,6 +173,18 @@ export function ProductsSection({ products, onAddToCart, onConsult, whatsapp }: 
             </div>
           ))}
         </div>
+
+        {/* Ver mais — mobile only, when there are hidden products */}
+        {!showAll && filtered.length > MOBILE_INITIAL_COUNT && (
+          <div className="mt-12 flex justify-center md:hidden">
+            <button
+              onClick={() => setShowAll(true)}
+              className="px-10 py-4 rounded-full border-2 border-navy/10 text-[10px] font-bold uppercase tracking-widest text-navy hover:bg-navy hover:text-white hover:border-navy transition-all active:scale-95"
+            >
+              Ver mais ({filtered.length - MOBILE_INITIAL_COUNT} produtos)
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
