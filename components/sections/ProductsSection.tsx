@@ -29,8 +29,7 @@ const TAG_ORDER = ['todos', 'solar', 'grau', 'lentes', 'infantil', 'acessorios']
 const allTags = useMemo(() => {
   const tags = new Set<string>();
   products.forEach(p => p.tags.forEach(t => tags.add(t)));
-  const remaining = Array.from(tags).filter(t => !TAG_ORDER.includes(t));
-  return [...TAG_ORDER.filter(t => t === 'todos' || tags.has(t)), ...remaining];
+  return TAG_ORDER.filter(t => t === 'todos' || tags.has(t));
 }, [products]);
 
   const filtered = activeTag === 'todos'
@@ -96,7 +95,7 @@ const allTags = useMemo(() => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-16">
           {visibleProducts.map(product => (
             <div
               key={product.id}
