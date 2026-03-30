@@ -19,6 +19,9 @@ export function PublicSite() {
 
   useEffect(() => {
     document.title = 'Ótica Roland | Vila Mariana, SP';
+    const handler = () => setIsCartOpen(true);
+    window.addEventListener('open-cart', handler);
+    return () => window.removeEventListener('open-cart', handler);
   }, []);
 
   const handleConsult = (product: { name: string }) => {
