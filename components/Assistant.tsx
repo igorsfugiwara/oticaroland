@@ -13,10 +13,20 @@ interface AssistantProps {
   onAddToCart?: (product: Product) => void;
 }
 
-// Detecta se a resposta menciona algum produto do catálogo
-function detectMentionedProduct(text: string, products: Product[]): Product | null {
+// Detecta todos os produtos mencionados na resposta, em ordem de citação
+function detectMentionedProducts(text: string, products: Product[]): Product[] {
   const lower = text.toLowerCase();
-  return products.find(p => lower.includes(p.name.toLowerCase())) ?? null;
+  return products
+    .filter(p => lower.includes(p.name.toLowerCase()))
+    .sort((a, b) => lower.indexOf(a.name.toLowerCase()) - lower.indexOf(b.name.toLowerCase()));
+}
+
+// Renderiza **negrito** como <strong> sem usar dangerouslySetInnerHTML
+function renderBold(text: string): React.ReactNode[] {
+  const parts = text.split(/\*\*(.*?)\*\*/g);
+  return parts.map((part, i) =>
+    i % 2 === 1 ? <strong key={i} className="font-semibold">{part}</strong> : part
+  );
 }
 
 export function Assistant({ onAddToCart }: AssistantProps) {
@@ -28,6 +38,7 @@ export function Assistant({ onAddToCart }: AssistantProps) {
   const [history, setHistory] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [cardIndexes, setCardIndexes] = useState<Record<number, number>>({});
   const lastSentAt = useRef<number>(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -122,9 +133,11 @@ export function Assistant({ onAddToCart }: AssistantProps) {
               }
 
               // Mensagem normal
-              const mentionedProduct = m.role === 'ai'
-                ? detectMentionedProduct(m.text, activeProducts)
-                : null;
+              const mentionedProducts = m.role === 'ai'
+                ? detectMentionedProducts(m.text, activeProducts)
+                : [];
+              const cardIdx = cardIndexes[i] ?? 0;
+              const currentProduct = mentionedProducts[cardIdx] ?? null;
 
               return (
                 <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
@@ -134,30 +147,55 @@ export function Assistant({ onAddToCart }: AssistantProps) {
                         : 'bg-white border border-slate-100 text-slate-700 rounded-tl-none'
                       }`}
                   >
-                    {m.text}
+                    {m.role === 'ai' ? renderBold(m.text) : m.text}
                   </div>
 
-                  {/* Mini card do produto mencionado */}
-                  {mentionedProduct && (
-                    <div className="mt-2 bg-white border border-slate-100 rounded-2xl p-3 flex gap-3 items-center max-w-[85%] shadow-sm">
-                      <img
-                        src={mentionedProduct.imageUrl}
-                        className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
-                        alt={mentionedProduct.name}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-navy truncate">{mentionedProduct.name}</p>
-                        <p className="text-xs text-gold font-bold mt-0.5">
-                          R$ {mentionedProduct.price.toFixed(2)}
-                        </p>
+                  {/* Cards de produtos mencionados com carousel */}
+                  {currentProduct && (
+                    <div className="mt-2 max-w-[85%] w-full">
+                      <div className="bg-white border border-slate-100 rounded-2xl p-3 flex gap-3 items-center shadow-sm">
+                        <img
+                          src={currentProduct.imageUrl}
+                          className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
+                          alt={currentProduct.name}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-navy truncate">{currentProduct.name}</p>
+                          <p className="text-xs text-gold font-bold mt-0.5">
+                            R$ {currentProduct.price.toFixed(2)}
+                          </p>
+                        </div>
+                        {onAddToCart && (
+                          <button
+                            onClick={() => onAddToCart(currentProduct)}
+                            className="bg-navy text-white text-[10px] font-bold uppercase tracking-wider px-3 py-2 rounded-xl hover:bg-gold hover:text-navy transition-all shrink-0"
+                          >
+                            + Carrinho
+                          </button>
+                        )}
                       </div>
-                      {onAddToCart && (
-                        <button
-                          onClick={() => onAddToCart(mentionedProduct)}
-                          className="bg-navy text-white text-[10px] font-bold uppercase tracking-wider px-3 py-2 rounded-xl hover:bg-gold hover:text-navy transition-all shrink-0"
-                        >
-                          + Carrinho
-                        </button>
+
+                      {/* Navegação do carousel */}
+                      {mentionedProducts.length > 1 && (
+                        <div className="flex items-center justify-between mt-1.5 px-1">
+                          <button
+                            onClick={() => setCardIndexes(prev => ({ ...prev, [i]: Math.max(0, cardIdx - 1) }))}
+                            disabled={cardIdx === 0}
+                            className="text-[10px] font-bold text-slate-400 hover:text-navy disabled:opacity-30 transition-colors px-1"
+                          >
+                            ← anterior
+                          </button>
+                          <span className="text-[10px] text-slate-400 font-medium">
+                            {cardIdx + 1} / {mentionedProducts.length}
+                          </span>
+                          <button
+                            onClick={() => setCardIndexes(prev => ({ ...prev, [i]: Math.min(mentionedProducts.length - 1, cardIdx + 1) }))}
+                            disabled={cardIdx === mentionedProducts.length - 1}
+                            className="text-[10px] font-bold text-slate-400 hover:text-navy disabled:opacity-30 transition-colors px-1"
+                          >
+                            próximo →
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}
