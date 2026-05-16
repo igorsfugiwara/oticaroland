@@ -1,5 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { Product } from '../types';
+import { findRelevantProducts } from './embeddingService';
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
 
@@ -77,6 +78,14 @@ class GeminiService {
     const userMessage = request.userMessage.trim().slice(0, 500);
     if (!userMessage) return '';
 
+    let relevantProducts: Product[];
+    try {
+      relevantProducts = await findRelevantProducts(userMessage, request.products, 5);
+    } catch (error) {
+      console.warn('[GeminiService] Busca semântica falhou, usando todos os produtos:', error);
+      relevantProducts = request.products;
+    }
+
     const systemInstruction = `Você é o assistente virtual da Ótica Roland na Vila Mariana, São Paulo. Tom: educado, técnico e acolhedor.
 REGRAS:
 1. Responda de forma CURTA e DIRETA (máximo 3 frases).
@@ -90,7 +99,7 @@ REGRAS:
 9. Após adicionar ao carrinho, confirme com uma mensagem curta e positiva.
 
 PRODUTOS DISPONÍVEIS AGORA:
-${buildProductContext(request.products)}`;
+${buildProductContext(relevantProducts)}`;
 
     const trimmedHistory = request.history.slice(-10);
     const contents = [

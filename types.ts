@@ -9,6 +9,7 @@ export interface Product {
   active: boolean;
   order: number;
   tags: string[]; // ex: ["solar", "masculino", "premium"]
+  embedding?: number[]; // vetor semântico gerado pela Gemini API
 }
 
 export interface CartItem extends Product {
