@@ -5,7 +5,12 @@
       "Bash(npx tsc *)",
       "Bash(./node_modules/.bin/tsc --noEmit)",
       "Bash(npm install *)",
-      "Bash(./node_modules/.bin/vite build *)"
+      "Bash(./node_modules/.bin/vite build *)",
+      "Bash(git -C /home/user/github/oticaroland status)",
+      "Bash(git -C /home/user/github/oticaroland diff)",
+      "Bash(git -C /home/user/github/oticaroland log --oneline -5)",
+      "Bash(git -C /home/user/github/oticaroland add services/geminiService.ts .claude/settings.json)",
+      "Bash(git -C /home/user/github/oticaroland commit -m ' *)"
     ]
   }
 }
